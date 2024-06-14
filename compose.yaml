@@ -1,0 +1,29 @@
+services:
+  flask:
+    volumes:
+      - ./app:/app/app
+      - ./run.py:/app/run.py
+    build:
+      dockerfile: dev.Dockerfile
+    command: python run.py
+    ports:
+      - 5000:5000
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    restart: unless-stopped
+    
+  mariadb:
+    image: mariadb:11.4
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpassword
+      MARIADB_DATABASE: database
+      MARIADB_USER: user
+      MARIADB_PASSWORD: password
+    ports:
+      - 3306:3306
+    healthcheck:
+      test: healthcheck.sh --su-mysql --connect --innodb_initialized
+      interval: 1s
+      retries: 20
+    restart: unless-stopped
