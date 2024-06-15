@@ -1,5 +1,8 @@
 {% extends 'shared.html' %}
 
 {% block content %}
-    <h1>Hello World</h1>
+    <div id="content">
+        <button hx-get="/world" hx-target="#result" hx-swap="outerHTML">BUTTON!</button>
+    </div>
+    <h1 id="result">Hello</h1>
 {% endblock content %}
